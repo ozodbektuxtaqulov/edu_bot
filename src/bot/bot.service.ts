@@ -1,31 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Context, Markup } from 'telegraf';
 
 @Injectable()
 export class BotService {
-  private lessons: string[] = [];
-  private currentIndex = 0;
-
-  constructor() {
-    // lessons.json faylni o‘qish
-    const filePath = path.join(__dirname, '..', 'lessons.json');
-    const data = fs.readFileSync(filePath, 'utf-8');
-    this.lessons = JSON.parse(data);
-  }
-
-  getNextLesson(): string {
-    if (this.currentIndex >= this.lessons.length) {
-      return '✅ Barcha darslar tugadi!';
+  async onStart(ctx: Context) {
+    try {
+      ctx.reply(
+        'Botga xush kelibsiz 😊',
+        Markup.keyboard([
+          ['Settings', 'Help'],
+          ['Menu', 'Payment'],
+        ])
+          .resize()
+          .oneTime(),
+      );
+    } catch (error) {
+      console.log(error);
     }
-
-    const lesson = this.lessons[this.currentIndex];
-    this.currentIndex++;
-    return `📘 ${lesson}`;
   }
 
-  resetLessons(): string {
-    this.currentIndex = 0;
-    return '🔁 Darslar boshidan boshlanmoqda!';
+  async onHelp(ctx: Context) {
+    await ctx.reply(
+      `🆘 Yordam kerakmi?\nSiz menga bu raqam orqali bog'lanishingiz mumkin: 📞 910097959`,
+    );
+  }
+
+  async onSettings(ctx: Context) {
+    await ctx.reply('⚙️ Hozircha sozlamalar mavjud emas. Tez orada!');
+  }
+
+  async onMenu(ctx: Context) {
+    await ctx.reply('📋 Hozircha menyu mavjud emas. Tez orada yangilanadi!');
+  }
+
+  async onUnknownText(ctx: Context) {
+    await ctx.reply('⚠️ Bot faqat tugmalar orqali ishlaydi.');
   }
 }

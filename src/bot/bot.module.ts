@@ -9,7 +9,7 @@ dotenv.config();
 @Module({
   imports: [
     TelegrafModule.forRoot({
-      token: '7787597671:AAEgQBurzQ_Y7pFl3yKgILrnT0H0efT3q7I',
+      token: '7221582661:AAHKXXUlYTg6_j8PUXhV0WgD6tQ8tx6eUDY',
     }),
   ],
   providers: [BotUpdate, BotService],
